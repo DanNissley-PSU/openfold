@@ -141,9 +141,7 @@ if bare_metal_major != -1 and os.environ.get("CUDA_HOME") is not None:
         }
     )]
 else:
-    print("Warning: CUDA_HOME not set or invalid CUDA version. Skipping CUDAExtension build.")
-    modules = []
-else:
+    print("Warning: CUDA not available. Falling back to CppExtension.")
     modules = [CppExtension(
         name="attn_core_inplace_cuda",
         sources=[
@@ -154,6 +152,7 @@ else:
             'cxx': ['-O3'],
         }
     )]
+
 
 setup(
     name='openfold',
