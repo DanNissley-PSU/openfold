@@ -118,7 +118,7 @@ if bare_metal_major != -1:
     )]
 """
 
-if bare_metal_major != -1:
+if bare_metal_major != -1 and os.environ.get("CUDA_HOME") is not None:
     modules = [CUDAExtension(
         name="attn_core_inplace_cuda",
         sources=[
@@ -140,6 +140,9 @@ if bare_metal_major != -1:
             ),
         }
     )]
+else:
+    print("Warning: CUDA_HOME not set or bare_metal_major invalid. Skipping CUDAExtension build.")
+    modules = []
 
 else:
     modules = [CppExtension(
