@@ -37,6 +37,7 @@ extra_cuda_flags = [
     '--expt-extended-lambda'
 ]
 
+"""
 def get_cuda_bare_metal_version(cuda_dir):
     if cuda_dir==None or torch.version.cuda==None:
         print("CUDA is not found, cpu version is installed")
@@ -50,6 +51,21 @@ def get_cuda_bare_metal_version(cuda_dir):
         bare_metal_minor = release[1][0]
         
         return raw_output, bare_metal_major, bare_metal_minor
+"""
+
+def get_cuda_bare_metal_version(cuda_dir):
+    if cuda_dir is None:
+        print("Warning: CUDA_HOME is not set, skipping nvcc version check.")
+        return ("unknown", "0", "0")
+    try:
+        raw_output = subprocess.check_output([cuda_dir + "/bin/nvcc", "-V"], universal_newlines=True)
+        version_line = raw_output.split("\n")[-2]
+        version_str = version_line.strip().split(" ")[-1]
+        return version_str.split(".")
+    except Exception as e:
+        print("Warning: Could not detect nvcc version:", e)
+        return ("unknown", "0", "0")
+
 
 compute_capabilities = set([
     (5, 2), # Titan X
